@@ -3,33 +3,49 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import './App.css';
 import {Header} from "./Header/Header";
 import {Profile} from './Profile';
-import {CreatePost, IFormInput} from "./CreatePost";
+import {CreatePost, postType} from "./CreatePost";
 import {Post} from "./Post";
 import {Page404} from './Page404/Page404';
 
-const initialState: Array<IFormInput> = []
+const initialState: Array<postType> = []
 export type initialStateType = typeof initialState
+export type ActionType = addPostActionType
 
-const reducer = (state: initialStateType = initialState, action: any) => {
+const reducer = (state: initialStateType, action: ActionType): initialStateType  => {
     switch (action.type) {
-        case 'createPost':
-            return {...state, newPost: state.push()};
-
+        case 'ADD-POST':
+            const newPost = {
+                title: action.title,
+                text: action.text
+            }
+            return [...state, newPost];
         default:
-            return state
+            return state;
+    }
+}
+
+type addPostActionType = {
+    type: 'ADD-POST'
+    title: string
+    text: string
+}
+export const addPostAC = (title: string, text: string):addPostActionType =>{
+    return {
+        type: 'ADD-POST',
+        title,
+        text
     }
 }
 
 function App() {
-
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [posts, dispatch] = useReducer(reducer, initialState)
 
     return (
         <div className="App">
             <Header/>
             <Switch>
-                <Route exact path='/' render={() => <Profile/>}/>
-                <Route path='/createPost' render={() => <CreatePost/>}/>
+                <Route exact path='/' render={() => <Profile posts={posts}/>}/>
+                <Route path='/createPost' render={() => <CreatePost dispatch={dispatch}/>}/>
                 <Route path='/post' render={() => <Post/>}/>
                 <Route path={'/404'} render={() => <Page404/>}/>
                 <Redirect from={'*'} to={'/404'}/>
