@@ -1,23 +1,22 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from "yup";
+import {SubmitHandler, useForm} from "react-hook-form";
 import {Button, TextField} from "@material-ui/core";
+import {ActionType, addPostAC} from "./App";
 
-export interface IFormInput {
-    title: string;
-    post: string;
+export type postType = {
+    title: string
+    text: string
 }
-const schema = yup.object().shape({
-    title: yup.string().required(),
-    post: yup.string().required(),
-});
 
-export const CreatePost = () => {
-    const { register, formState: { errors }, handleSubmit } = useForm<IFormInput>({
-        resolver: yupResolver(schema)
-    });
-    const onSubmit: SubmitHandler<IFormInput> = data => console.log(data);
+
+export const CreatePost = ({dispatch}: { dispatch: (action: ActionType) => void }) => {
+    const {register, formState: {errors}, handleSubmit} = useForm<postType>();
+
+    const onSubmit: SubmitHandler<postType> = (data,e: any) => {
+        dispatch(addPostAC(data.title, data.text))
+
+        e.target.reset()
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -26,22 +25,25 @@ export const CreatePost = () => {
                 label="Заголовок"
                 margin="normal"
                 variant="outlined"
-                {...register("title", { required: true })}
+                {...register("title", {required: true})}
             />
-            <p>{errors.title && "Head name is required"}</p>
-            {/*<p>{errors.head?.message}</p>*/}
+            <p>{errors.title && "Head is required"}</p>
+
             <TextField
                 type="text"
                 label="Текст поста"
                 margin="normal"
                 variant="outlined"
-                {...register("post", { required: true })}
+                {...register("text", {required: true})
+                }
             />
-            {/*{errors.text && "Text name is required"}*/}
-            <p>{errors.post?.message}</p>
-            <Button type="submit" variant="contained" color="primary">
+            <p>{errors.text && "Text is required"}</p>
+
+            <Button type={'submit'} variant="contained" color="primary">
                 Создать пост
             </Button>
+
         </form>
+
     );
 }
