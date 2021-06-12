@@ -3,10 +3,16 @@ import {Redirect, Route, Switch} from 'react-router-dom';
 import './App.css';
 import {Header} from "./Header/Header";
 import {Profile} from './Profile';
-import {CreatePost, postType} from "./CreatePost";
+import {CreatePost} from "./CreatePost";
 import {Post} from "./Post";
 import {Page404} from './Page404/Page404';
+import {v1} from "uuid";
 
+type postType = {
+    id: string
+    title: string
+    text: string
+}
 const initialState: Array<postType> = []
 export type initialStateType = typeof initialState
 export type ActionType = addPostActionType
@@ -15,6 +21,7 @@ const reducer = (state: initialStateType, action: ActionType): initialStateType 
     switch (action.type) {
         case 'ADD-POST':
             const newPost = {
+                id: action.id,
                 title: action.title,
                 text: action.text
             }
@@ -26,12 +33,14 @@ const reducer = (state: initialStateType, action: ActionType): initialStateType 
 
 type addPostActionType = {
     type: 'ADD-POST'
+    id: string
     title: string
     text: string
 }
 export const addPostAC = (title: string, text: string):addPostActionType =>{
     return {
         type: 'ADD-POST',
+        id: v1(),
         title,
         text
     }
