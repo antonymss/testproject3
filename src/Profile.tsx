@@ -1,13 +1,11 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import {initialStateType} from "./App";
 
 
-export const Profile = ({posts}:{posts: initialStateType}) => {
-    const titleView = posts.map(post => <li>{post.title}</li>)
-    const textView = posts.map(post => <li>{post.text}</li>)
+export const Profile = ({posts}: { posts: initialStateType }) => {
+    const titleView = posts.map(post => <NavLink to={'/post/' + post.id}>{post.title} {post.text}</NavLink>)
     return <ul>
         {titleView}
-        {textView}
-
     </ul>
 }
