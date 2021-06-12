@@ -3,19 +3,18 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {Button, TextField} from "@material-ui/core";
 import {ActionType, addPostAC} from "./App";
 
-export type postType = {
+type FormData = {
     title: string
     text: string
-}
-
+};
 
 export const CreatePost = ({dispatch}: { dispatch: (action: ActionType) => void }) => {
-    const {register, formState: {errors}, handleSubmit} = useForm<postType>();
+    const {register, formState: {errors}, handleSubmit, reset} = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<postType> = (data,e: any) => {
+    const onSubmit: SubmitHandler<FormData> = (data) => {
         dispatch(addPostAC(data.title, data.text))
 
-        e.target.reset()
+        reset()
     };
 
     return (
